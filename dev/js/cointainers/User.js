@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { validateUser } from '../actions/UserActions';
 import {bindActionCreators} from 'redux';
+import { withRouter } from 'react-router-dom';
 
 class User extends Component {
     constructor(props) {
@@ -18,11 +19,23 @@ class User extends Component {
         return false;
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot){
+        const currentState = this.props.userState;
+        const previousState = prevProps.userState;
+        if(currentState != previousState){
+            console.log(currentState)
+            if(currentState.status){
+                this.props.history.push('/posts');
+                return false;
+            }
+        }
+        return true;
+    }
+
     render() {
         return (
             <div className="row">
                 <div className="col-md-5">
-                    <form onSubmit={this.submit}>
                         <div className="form-group">
                             <label>Email address</label>
                             <input type="email" onChange={(e) => {
@@ -38,8 +51,7 @@ class User extends Component {
                         <div className="form-check">
 
                         </div>
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                    </form>
+                        <button type="button"  onClick={this.submit} className="btn btn-primary">Submit</button>
                 </div>
             </div>
         )
@@ -47,9 +59,8 @@ class User extends Component {
 }
 
 function mapStateToProps(state) {
-    console.log(state);
     return {
-        user: state.userState
+        userState: state.userState
     };
 }
 
@@ -59,4 +70,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (User);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (User));

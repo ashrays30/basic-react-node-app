@@ -5,15 +5,17 @@ import { createStore, applyMiddleware } from "redux";
 import  createLogger  from "redux-logger";
 import allReducers from "./reducers/AllReducers";
 import thunk from 'redux-thunk';
-import { getInitialState } from "./store/InitialState";
 import App from './app';
 
-const initialState = getInitialState();
+const preloadedState = window.__PRELOADED_STATE__
+
+delete window.__PRELOADED_STATE__
+
 
 const logger = createLogger();
 const store = createStore(
     allReducers,
-    initialState,
+    preloadedState,
     applyMiddleware(thunk,logger)
 );
 
